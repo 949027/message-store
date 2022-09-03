@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from environs import Env
+import dj_database_url
 
 
 env = Env()
@@ -28,10 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', True)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
 
 # Application definition
 
@@ -87,12 +87,13 @@ WSGI_APPLICATION = 'message_store.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+DATABASES = {'default': dj_database_url.config(
+    default='postgres://{}:{}@db:5432/{}'.format(
+        env('POSTGRES_USER'),
+        env('POSTGRES_PASSWORD'),
+        env('POSTGRES_DB'),
+    ),
+)}
 
 
 # Password validation
