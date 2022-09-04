@@ -32,7 +32,7 @@ docker-compose up
 
 5) В другом терминале создайте суперпользователя:
 ```commandline
-docker exec -it web python manage.py createsuperuser
+docker exec -it django python manage.py createsuperuser
 ```
 6) После этого можно использовать админ-панель http://127.0.0.1:8000/admin/ и добавить ещё пользователей.
 
@@ -45,13 +45,16 @@ curl -X POST -H "Content-Type: application/json" -d '{"username": "admin", "pass
 ### Сохранить сообщение в БД
 Отправить post-запрос на http://127.0.0.1:8000/app/message/ с `Authorization` в заголовке и `message` в теле запроса:
 ```commandline
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer_{token}" -d '{"message": "Hello"}' http://127.0.0.1:8000/app/message/
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer_token" -d '{"message": "Hello"}' http://127.0.0.1:8000/app/message/
 ```
+где token - заранее полученный токен 
 ### Получить историю сообщений
 Отправить post-запрос на http://127.0.0.1:8000/app/message/ с `Authorization` в заголовке и `message` (вида `history {amount}`) в теле запроса:
 ```commandline
-curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer_{token}" -d '{"message": "history 10"}' http://127.0.0.1:8000/app/message/
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer_token" -d '{"message": "history 10"}' http://127.0.0.1:8000/app/message/
 ```
+где token - заранее полученный токен.
+
 Выводит последние 10 сообщений.
 
 ## Цели проекта
