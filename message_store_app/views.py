@@ -8,6 +8,7 @@ from message_store_app.models import Message
 
 
 class MessageSerializer(ModelSerializer):
+    """Сериалайзер для поступающих сообщений"""
     class Meta:
         model = Message
         fields = ['message']
@@ -16,6 +17,12 @@ class MessageSerializer(ModelSerializer):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def process_request(request):
+    """Логика эндпоинта `/app/message`.
+    1) Полученные данные проходят через сериалайзер.
+    2) Если полученное сообщение соответствует паттерну "history {amount},
+    тогда формируется и отправляется список последних сообщений этого пользователя.
+    3) Если сообщение не соответствует паттерну, то оно сохраняется в БД
+    и отправляется сообщение 'Message saved'"""
     serializer = MessageSerializer(data=request.data)
     serializer.is_valid(raise_exception=False)
     message = serializer.validated_data['message']
